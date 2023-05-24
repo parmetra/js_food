@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	});
 
 	// Таймер - 2 урок
-	const deadline = "2023-04-21";
+	const deadline = "2023-05-28";
 
 	function getTimeRemaining(end) {
 		const t = Date.parse(end) - Date.parse(new Date());
@@ -222,6 +222,64 @@ window.addEventListener("DOMContentLoaded", () => {
 		".menu .container",
 		'menu__item'
 	).render();
+
+	// Формы
+	const forms = document.querySelectorAll("form");
+
+	const message = {
+		loading: 'Загрузка',
+		succes: "Успех",
+		failure: "Что-то пошло не так"
+	};
+
+	forms.forEach(item => { // Навешивание функции postData (ниже) на каждую форму
+		postData(item);
+	});
+
+	function postData(form) {
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+
+			const statusMessage = document.createElement("div");
+			statusMessage.classList.add("status");
+			statusMessage.textContent = message.loading;
+			form.append(statusMessage);
+
+			const request = new XMLHttpRequest();
+			request.open("POST", "server.php");
+			// request.setRequestHeader("Content-type", "undefined"); // для формата FormData
+			request.setRequestHeader("Content-type", "application/json");
+
+			const object = {};
+
+			const formData = new FormData(form);
+
+			formData.forEach(function(value, key) {
+				object[key] = value;
+			});
+
+			const json = JSON.stringify(object);
+
+
+			// request.send(formData); // для формата FormData
+			request.send(json);
+
+			request.addEventListener("load", () => {
+				if (request.status === 200) {
+					console.log(request.response);
+					statusMessage.textContent = message.succes;
+					form.reset();
+					setTimeout(() => {
+						statusMessage.remove();
+					}, 2000);
+				}
+				else {
+					console.log(request.response);
+					statusMessage.textContent = message.succes;
+				}
+			});
+		});
+	}
 });
 
 
