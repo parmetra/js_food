@@ -345,6 +345,47 @@ window.addEventListener("DOMContentLoaded", () => {
 	fetch("http://localhost:3000/menu")
 	.then(data => data.json())
 	.then(res => console.log(res));
+
+
+	// Слайдер
+	let nextSlideBtn = document.querySelector(".offer__slider-next"),
+		prevSlideBtn = document.querySelector(".offer__slider-prev"),
+		currentSlide = document.querySelector("#current"),
+		totalSlide = document.querySelector("#total"),
+		imageSlide = document.querySelector(".offer__slide img"),
+		slideCollection = [["img/slider/pepper.jpg", "pepper"], ["img/slider/food-12.jpg", "food"], ["img/slider/olive-oil.jpg", "pil"], ["img/slider/paprika.jpg", "paprika"]],
+		counterSlides = 0;
+	
+	totalSlide.textContent = `0${slideCollection.length}`;
+
+	nextSlideBtn.addEventListener("click", () => {
+		counterSlides++;
+		if (counterSlides > (slideCollection.length - 1)) {
+			counterSlides = 0;
+		}
+		slidePhoto();
+		return counterSlides;
+	});
+
+	prevSlideBtn.addEventListener("click", () => {
+		counterSlides--;
+		if (counterSlides < 0) {
+			counterSlides = slideCollection.length - 1;
+		}		
+		slidePhoto();
+		return counterSlides;
+	});
+
+	function slidePhoto() {
+		imageSlide.src = slideCollection[counterSlides][0]; // Внести новый src
+		imageSlide.alt = slideCollection[counterSlides][1]; // Внести новый alt
+
+		currentSlide.textContent = counterSlides + 1; // Цифра текущего слайда
+
+		if (counterSlides < 10) { // Если цифра текущего слайда меньше 10, добавлять 0 впереди
+			currentSlide.textContent = `0${currentSlide.textContent}`; 
+		}
+	}
 });
 
 
