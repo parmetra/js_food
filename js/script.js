@@ -348,7 +348,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 	// Слайдер
-	let nextSlideBtn = document.querySelector(".offer__slider-next"),
+	/* let nextSlideBtn = document.querySelector(".offer__slider-next"),
 		prevSlideBtn = document.querySelector(".offer__slider-prev"),
 		currentSlide = document.querySelector("#current"),
 		totalSlide = document.querySelector("#total"),
@@ -390,7 +390,64 @@ window.addEventListener("DOMContentLoaded", () => {
 		imageSlide[counterSlides - 1].classList.remove("hide"); // убираем у текущшего слайда hide
 		imageSlide[counterSlides - 1].classList.add("show");	// добавляем текущему слайду show
 		currentSlide.textContent = isLessThanTen(counterSlides);// выводим значение текущего слайда
+	} */
+
+
+	// Слайдер 2. Сложная версия
+	let nextSlideBtn = document.querySelector(".offer__slider-next"),
+		prevSlideBtn = document.querySelector(".offer__slider-prev"),
+		currentSlide = document.querySelector("#current"),
+		totalSlide = document.querySelector("#total"),
+		imageSlide = document.querySelectorAll(".offer__slide"),
+		counterSlides = 1,
+		offset = 0,
+		slidesWrapper = document.querySelector(".offer__slider-wrapper"),
+		slidesField = document.querySelector(".offer__slider-inner"),
+		widthSlide = window.getComputedStyle(slidesWrapper).width;
+
+	slidesField.style.width = 100 * imageSlide.length + "%";
+	slidesField.style.display = "flex";
+	slidesField.style.transition = "0.5s all";
+
+	slidesWrapper.style.overflow = "hidden";
+
+	imageSlide.forEach(item => {
+		item.style.width = widthSlide;
+	})
+
+	nextSlideBtn.addEventListener("click", () => {	// кнопка слайдов вперёд
+		counterSlides++;
+		if(offset == +widthSlide.slice(0, widthSlide.length - 2) * (imageSlide.length - 1) && (counterSlides > totalSlide.textContent)) {	// проверка на то, что слайд и счётчик являются последними
+			offset = 0;
+			counterSlides = 1;
+		}
+		else {
+			offset += +widthSlide.slice(0, widthSlide.length - 2);
+		}
+		slidesField.style.transform = `translateX(-${offset}px)`;
+		currentSlide.textContent = isLessThanTen(counterSlides);// выводим значение текущего слайда
+	});
+
+	prevSlideBtn.addEventListener("click", () => {	// кнопка слайдов назад
+		counterSlides--;
+		if(offset == 0 && (counterSlides < 1)) {	// проверка на то, что слайд и счётчик являются последними
+			offset = +widthSlide.slice(0, widthSlide.length - 2) * (imageSlide.length - 1)
+			counterSlides = imageSlide.length;
+		}
+		else {
+			offset -= +widthSlide.slice(0, widthSlide.length - 2);
+		}
+		slidesField.style.transform = `translateX(-${offset}px)`;
+		currentSlide.textContent = isLessThanTen(counterSlides);// выводим значение текущего слайда
+	});
+
+	function isLessThanTen(number) { //функция добавляет `0` перед числом, если оно меньше 10
+		if (number < 10) {
+			number = `0${number}`;
+		}
+		return number;
 	}
+
 });
 
 
