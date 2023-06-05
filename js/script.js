@@ -417,12 +417,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
 	nextSlideBtn.addEventListener("click", () => {	// кнопка слайдов вперёд
 		counterSlides++;
-		if(offset == +widthSlide.slice(0, widthSlide.length - 2) * (imageSlide.length - 1) && (counterSlides > totalSlide.textContent)) {	// проверка на то, что слайд и счётчик являются последними
+		if(offset == clearNotDigits(widthSlide) * (imageSlide.length - 1) && (counterSlides > totalSlide.textContent)) {	// проверка на то, что слайд и счётчик являются последними
 			offset = 0;
 			counterSlides = 1;
 		}
 		else {
-			offset += +widthSlide.slice(0, widthSlide.length - 2);
+			offset += clearNotDigits(widthSlide);
 		}
 		slidesField.style.transform = `translateX(-${offset}px)`;
 		currentSlide.textContent = isLessThanTen(counterSlides);// выводим значение текущего слайда
@@ -433,11 +433,11 @@ window.addEventListener("DOMContentLoaded", () => {
 	prevSlideBtn.addEventListener("click", () => {	// кнопка слайдов назад
 		counterSlides--;
 		if(offset == 0 && (counterSlides < 1)) {	// проверка на то, что слайд и счётчик являются последними
-			offset = +widthSlide.slice(0, widthSlide.length - 2) * (imageSlide.length - 1);
+			offset = clearNotDigits(widthSlide) * (imageSlide.length - 1);
 			counterSlides = imageSlide.length;
 		}
 		else {
-			offset -= +widthSlide.slice(0, widthSlide.length - 2);
+			offset -= clearNotDigits(widthSlide);
 		}
 		slidesField.style.transform = `translateX(-${offset}px)`;
 		currentSlide.textContent = isLessThanTen(counterSlides);// выводим значение текущего слайда
@@ -504,7 +504,7 @@ window.addEventListener("DOMContentLoaded", () => {
 			const slideTo = e.target.getAttribute('data-slide-to');
 
 			counterSlides = slideTo;
-			offset = +widthSlide.slice(0, widthSlide.length - 2) * (slideTo - 1);
+			offset = clearNotDigits(widthSlide) * (slideTo - 1);
 			slidesField.style.transform = `translateX(-${offset}px)`;
 
 			currentSlide.textContent = isLessThanTen(slideTo);// выводим значение текущего слайда
@@ -521,6 +521,9 @@ window.addEventListener("DOMContentLoaded", () => {
 		dots[counterSlides - 1].style.opacity = "1";
 	}
 
+	function clearNotDigits(str) {	// очистка строки от всех символов, кроме чисел
+		return +str.replace(/\D/g, "");
+	}
 });
 
 
