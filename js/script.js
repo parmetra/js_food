@@ -524,6 +524,88 @@ window.addEventListener("DOMContentLoaded", () => {
 	function clearNotDigits(str) {	// очистка строки от всех символов, кроме чисел
 		return +str.replace(/\D/g, "");
 	}
+
+
+	// Калькулятор на сайте
+	let calcResult = document.querySelector(".calculating__result span"),
+		gender = "female",
+		ratio = "1.375",
+		height, weight, age;
+
+	function formulaCalorie() {
+		if (!gender || !height || !weight || !age || !ratio) {
+			calcResult.textContent = "____";
+			return;
+		}
+
+		if (gender == "male") {
+			calcResult.textContent = Math.round(ratio * (88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)));
+		}
+		else if (gender == "female") {
+			calcResult.textContent = Math.round(ratio * (447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)));
+		}
+	}
+
+	formulaCalorie();
+
+	function getStaticInfo(parentSelector, activeClass) {
+		const elements = document.querySelectorAll(`${parentSelector} div`);
+
+		elements.forEach(item => {
+			item.addEventListener("click", (e) => {
+				if (e.target.getAttribute("data-ratio")) {
+					ratio = +e.target.getAttribute("data-ratio");
+				} else {
+					gender = e.target.getAttribute("id");
+				}
+	
+				elements.forEach(item => {
+					item.classList.remove(activeClass);
+				});
+				e.target.classList.add(activeClass);
+				formulaCalorie();
+			});
+		});
+		/* document.querySelector(parentSelector).addEventListener("click", (e) => {
+			if (e.target.getAttribute("data-ratio")) {
+				ratio = +e.target.getAttribute("data-ratio");
+			} else {
+				gender = e.target.getAttribute("id");
+			}
+
+			elements.forEach(item => {
+				item.classList.remove(activeClass);
+			});
+			e.target.classList.add(activeClass);
+			formulaCalorie();
+		}); */
+	}
+
+	getStaticInfo("#gender", "calculating__choose-item_active");
+	getStaticInfo(".calculating__choose_big", "calculating__choose-item_active");
+
+	function getDynamicInfo(selector) {
+		let input = document.querySelector(selector);
+		input.addEventListener("input", () => {
+			switch(input.getAttribute("id")) {
+				case "height":
+					height = +input.value;
+					break;
+				case "weight":
+					weight = +input.value;
+					break;
+				case "age":
+					age = +input.value;
+					break;
+			}
+		formulaCalorie();
+		});
+	}
+
+	getDynamicInfo("#height");
+	getDynamicInfo("#weight");
+	getDynamicInfo("#age");
+
 });
 
 
