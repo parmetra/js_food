@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	});
 
 	// Таймер - 2 урок
-	const deadline = "2023-05-28";
+	const deadline = "2023-06-30";
 
 	function getTimeRemaining(end) {
 		const t = Date.parse(end) - Date.parse(new Date());
@@ -352,39 +352,44 @@ window.addEventListener("DOMContentLoaded", () => {
 		prevSlideBtn = document.querySelector(".offer__slider-prev"),
 		currentSlide = document.querySelector("#current"),
 		totalSlide = document.querySelector("#total"),
-		imageSlide = document.querySelector(".offer__slide img"),
-		slideCollection = [["img/slider/pepper.jpg", "pepper"], ["img/slider/food-12.jpg", "food"], ["img/slider/olive-oil.jpg", "pil"], ["img/slider/paprika.jpg", "paprika"]],
-		counterSlides = 0;
-	
-	totalSlide.textContent = `0${slideCollection.length}`;
+		imageSlide = document.querySelectorAll(".offer__slide"),
+		counterSlides = 1;
+		
+	totalSlide.textContent = isLessThanTen(imageSlide.length);	// добавляем на страницу общее количество слайдом, применив функцию isLessThanTen()
+	slidePhoto(counterSlides);									// впервый раз инициализируем слайды на странице
 
-	nextSlideBtn.addEventListener("click", () => {
+	nextSlideBtn.addEventListener("click", () => {	// кнопка слайдов вперёд
 		counterSlides++;
-		if (counterSlides > (slideCollection.length - 1)) {
-			counterSlides = 0;
+		if (counterSlides > (totalSlide.textContent)) {
+			counterSlides = 1;
 		}
-		slidePhoto();
-		return counterSlides;
+		slidePhoto(counterSlides);
 	});
 
-	prevSlideBtn.addEventListener("click", () => {
+	prevSlideBtn.addEventListener("click", () => {	// кнопка слайдов назад
 		counterSlides--;
-		if (counterSlides < 0) {
-			counterSlides = slideCollection.length - 1;
-		}		
-		slidePhoto();
-		return counterSlides;
+		if (counterSlides < 1) {
+			counterSlides = imageSlide.length;
+		}
+		slidePhoto(counterSlides);
+
 	});
 
-	function slidePhoto() {
-		imageSlide.src = slideCollection[counterSlides][0]; // Внести новый src
-		imageSlide.alt = slideCollection[counterSlides][1]; // Внести новый alt
-
-		currentSlide.textContent = counterSlides + 1; // Цифра текущего слайда
-
-		if (counterSlides < 10) { // Если цифра текущего слайда меньше 10, добавлять 0 впереди
-			currentSlide.textContent = `0${currentSlide.textContent}`; 
+	function isLessThanTen(number) { //функция добавляет `0` перед числом, если оно меньше 10
+		if (number < 10) {
+			number = `0${number}`;
 		}
+		return number;
+	}
+
+	function slidePhoto(counterSlides) {	// функция переключения слайдов
+		imageSlide.forEach((item) => {
+			item.classList.remove("show");	// убираем у всех салйдов класс show
+			item.classList.add("hide");		// добавляем всем слайдам класс hide
+		});
+		imageSlide[counterSlides - 1].classList.remove("hide"); // убираем у текущшего слайда hide
+		imageSlide[counterSlides - 1].classList.add("show");	// добавляем текущему слайду show
+		currentSlide.textContent = isLessThanTen(counterSlides);// выводим значение текущего слайда
 	}
 });
 
