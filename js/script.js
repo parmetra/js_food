@@ -528,9 +528,42 @@ window.addEventListener("DOMContentLoaded", () => {
 
 	// Калькулятор на сайте
 	let calcResult = document.querySelector(".calculating__result span"),
-		gender = "female",
-		ratio = "1.375",
+		gender,
+		ratio,
 		height, weight, age;
+	
+	if (localStorage.getItem("ratio")) {
+		ratio = localStorage.getItem("ratio");
+	} else {
+		ratio = "1.375";
+		localStorage.setItem("ratio", ratio);
+	}
+	if (localStorage.getItem("gender")) {
+		gender = localStorage.getItem("gender");
+	} else {
+		gender = "female";
+		localStorage.setItem("gender", gender);
+
+	}
+
+	function initLocalSettings(selector, activeClass) {
+		let elements = document.querySelectorAll(selector);
+
+		elements.forEach(item => {
+			if (item.getAttribute("data-ratio") == localStorage.getItem("ratio")) {
+				item.classList.add(activeClass);
+			}
+			else if (item.getAttribute("id") == localStorage.getItem("gender")) {
+				item.classList.add(activeClass);
+			}
+			else {
+				item.classList.remove(activeClass);
+			}
+		})
+	}
+
+	initLocalSettings("#gender div", "calculating__choose-item_active");
+	initLocalSettings(".calculating__choose_big div", "calculating__choose-item_active");
 
 	function formulaCalorie() {
 		if (!gender || !height || !weight || !age || !ratio) {
@@ -546,17 +579,17 @@ window.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
-	formulaCalorie();
-
-	function getStaticInfo(parentSelector, activeClass) {
-		const elements = document.querySelectorAll(`${parentSelector} div`);
+	function getStaticInfo(selector, activeClass) {
+		const elements = document.querySelectorAll(selector);
 
 		elements.forEach(item => {
 			item.addEventListener("click", (e) => {
 				if (e.target.getAttribute("data-ratio")) {
 					ratio = +e.target.getAttribute("data-ratio");
+					localStorage.setItem("ratio", ratio);
 				} else {
 					gender = e.target.getAttribute("id");
+					localStorage.setItem("gender", gender);
 				}
 	
 				elements.forEach(item => {
@@ -566,27 +599,21 @@ window.addEventListener("DOMContentLoaded", () => {
 				formulaCalorie();
 			});
 		});
-		/* document.querySelector(parentSelector).addEventListener("click", (e) => {
-			if (e.target.getAttribute("data-ratio")) {
-				ratio = +e.target.getAttribute("data-ratio");
-			} else {
-				gender = e.target.getAttribute("id");
-			}
-
-			elements.forEach(item => {
-				item.classList.remove(activeClass);
-			});
-			e.target.classList.add(activeClass);
-			formulaCalorie();
-		}); */
 	}
 
-	getStaticInfo("#gender", "calculating__choose-item_active");
-	getStaticInfo(".calculating__choose_big", "calculating__choose-item_active");
+	getStaticInfo("#gender div", "calculating__choose-item_active");
+	getStaticInfo(".calculating__choose_big div", "calculating__choose-item_active");
 
 	function getDynamicInfo(selector) {
 		let input = document.querySelector(selector);
 		input.addEventListener("input", () => {
+
+			if(input.value.match(/\D/g)) {	// подсветка инпута красным, если в поле не цифра
+				input.style.border = "2px dotted red";
+			} else {
+				input.style.border = "none";
+			}
+
 			switch(input.getAttribute("id")) {
 				case "height":
 					height = +input.value;
