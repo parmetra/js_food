@@ -1,6 +1,33 @@
-const forms = function() {
+import { modalWindow } from "./modals";
+import { postData } from "../services/services";
+
+const forms = function(formSelector, modalSelector, modalTimerID) {
+	function showThanksModal(message) {
+		const modalDialog = document.querySelector(".modal__dialog");
+		modalDialog.classList.add("hide");
+		modalWindow("show", "hide", "hidden", modalSelector, modalTimerID);
+
+		const thanksModal = document.createElement("div");
+		thanksModal.classList.add("modal__dialog");
+		thanksModal.innerHTML = `
+		<div class="modal__content">
+			<div data-close class="modal__close">&times;</div>
+			<div class="modal__title">${message}</div>
+		</div>
+		`;
+
+		document.querySelector(".modal").append(thanksModal);
+		setTimeout(() => {
+			thanksModal.remove();
+			modalDialog.classList.remove("hide");
+			modalDialog.classList.add("show");
+			modalWindow("hide", "show", "", modalSelector, modalTimerID);
+
+
+		}, 2000);
+	}
 	// Формы
-	const forms = document.querySelectorAll("form");
+	const forms = document.querySelectorAll(formSelector);
 
 	const message = {
 		loading: 'spinner.svg',
@@ -11,18 +38,6 @@ const forms = function() {
 	forms.forEach(item => { // Навешивание функции bindPostData (ниже) на каждую форму
 		bindPostData(item);
 	});
-
-	const postData = async (url, data) => {
-		const result = await fetch(url, {
-			method: "POST",
-			headers: {
-					"Content-type": "application/json"
-			},
-			body: data
-		});
-
-		return await result.json();
-	};
 
 	function bindPostData(form) {
 		form.addEventListener("submit", (e) => {
@@ -59,6 +74,7 @@ const forms = function() {
 	fetch("http://localhost:3000/menu")
 	.then(data => data.json())
 	.then(res => console.log(res));
+	
 };
 
-module.exports = forms;
+export default forms;

@@ -1,6 +1,5 @@
-const timers = function() {
+const timers = function(id, deadline) {
 	// Таймер - 2 урок
-	const deadline = "2023-06-30";
 
 	function getTimeRemaining(end) {
 		const t = Date.parse(end) - Date.parse(new Date());
@@ -52,7 +51,7 @@ const timers = function() {
 		}
 	}
 
-	setClock(".timer", deadline);
+	setClock(id, deadline);
 };
 
-module.exports = timers;
+export default timers;

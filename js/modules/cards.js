@@ -1,3 +1,5 @@
+import { getResources } from "../services/services";
+
 function cards() {
 	/* Создание класса для карточек */
 	class MenuCard {
@@ -45,14 +47,6 @@ function cards() {
 		}
 	}
 
-	const getResources = async (url) => {
-		const result = await fetch(url);
-		if (!result.ok) {
-			throw new Error(`Мы не можем получить ${url}. Статус: ${result.status}`);
-		}
-		return await result.json();
-	};
-
 	// Библиотека axios для постинга
 	axios.get("http://localhost:3000/menu").then(data => {
 		data.data.forEach(({img, altimg, title, descr, price}) => {
@@ -61,4 +55,4 @@ function cards() {
 	});
 };
 
-module.exports = cards;
+export default cards;

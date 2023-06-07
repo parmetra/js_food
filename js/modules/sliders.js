@@ -1,4 +1,4 @@
-const sliders = function() {
+const sliders = function({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, field}) {
 	// Слайдер
 	/* let nextSlideBtn = document.querySelector(".offer__slider-next"),
 		prevSlideBtn = document.querySelector(".offer__slider-prev"),
@@ -46,15 +46,15 @@ const sliders = function() {
 
 
 	// Слайдер 2. Сложная версия
-	let nextSlideBtn = document.querySelector(".offer__slider-next"),
-		prevSlideBtn = document.querySelector(".offer__slider-prev"),
-		currentSlide = document.querySelector("#current"),
-		totalSlide = document.querySelector("#total"),
-		imageSlide = document.querySelectorAll(".offer__slide"),
+	let nextSlideBtn = document.querySelector(nextArrow),
+		prevSlideBtn = document.querySelector(prevArrow),
+		currentSlide = document.querySelector(currentCounter),
+		totalSlide = document.querySelector(totalCounter),
+		imageSlide = document.querySelectorAll(slide),
 		counterSlides = 1,
 		offset = 0,
-		slidesWrapper = document.querySelector(".offer__slider-wrapper"),
-		slidesField = document.querySelector(".offer__slider-inner"),
+		slidesWrapper = document.querySelector(wrapper),
+		slidesField = document.querySelector(field),
 		widthSlide = window.getComputedStyle(slidesWrapper).width;
 
 	slidesField.style.width = 100 * imageSlide.length + "%";
@@ -105,7 +105,7 @@ const sliders = function() {
 	}
 
 	// Навигация в слайдере
-	let slider = document.querySelector(".offer__slider");
+	let slider = document.querySelector(container);
 
 	slider.style.position = "relative";
 
@@ -178,4 +178,4 @@ const sliders = function() {
 	}
 };
 
-module.exports = sliders;
+export default sliders;

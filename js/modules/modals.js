@@ -1,61 +1,36 @@
-const modals = function() {
-	function showThanksModal(message) {
-		const modalDialog = document.querySelector(".modal__dialog");
-		modalDialog.classList.add("hide");
-		modalWindow("show", "hide", "hidden");
+function modalWindow(firstClass, secondsClass, isHidden, modalSelector, modalTimerID) {
+	const modal = document.querySelector(modalSelector);	
+	modal.classList.add(firstClass);
+	modal.classList.remove(secondsClass);
+	document.body.style.overflow = isHidden;
 
-		const thanksModal = document.createElement("div");
-		thanksModal.classList.add("modal__dialog");
-		thanksModal.innerHTML = `
-		<div class="modal__content">
-			<div data-close class="modal__close">&times;</div>
-			<div class="modal__title">${message}</div>
-		</div>
-		`;
-
-		document.querySelector(".modal").append(thanksModal);
-		setTimeout(() => {
-			thanksModal.remove();
-			modalDialog.classList.remove("hide");
-			modalDialog.classList.add("show");
-			modalWindow("hide", "show", "");
-
-
-		}, 2000);
-	}
-
-	/* Модальное окно */
-	const modalTrigger = document.querySelectorAll("[data-modal]"),
-		// modalClose = document.querySelectorAll("[data-close]"),
-		modal = document.querySelector(".modal");
-
-	function modalWindow(first, seconds, isHidden) {
-		modal.classList.add(first);
-		modal.classList.remove(seconds);
-		document.body.style.overflow = isHidden;
+	if (modalTimerID) {
 		clearInterval(modalTimerID);
-	}
+	}	
+}
+
+const modals = function(triggerSelector, modalSelector, modalTimerID) {
+	
+	/* Модальное окно */
+	const modalTrigger = document.querySelectorAll(triggerSelector),
+		// modalClose = document.querySelectorAll("[data-close]"),
+		modal = document.querySelector(modalSelector);
 
 	modalTrigger.forEach(item => {
 		item.addEventListener("click", () => {
-			modalWindow("show", "hide", "hidden");
+			modalWindow("show", "hide", "hidden", modalSelector, modalTimerID);
 		});
 	});	
 
 	modal.addEventListener("click", (e) => {
 		if (e.target === modal || e.target.getAttribute("data-close") == "") { // Делегирование событий на динамические крестики закрытия окон
-			modalWindow("hide", "show", "");
+			modalWindow("hide", "show", "", modalSelector, modalTimerID);
 		}
 	});
 
 	document.addEventListener("keydown", (e) => {
-		if (e.code === "Escape" && modal.classList.contains("show")) modalWindow("hide", "show", "");
+		if (e.code === "Escape" && modal.classList.contains("show")) modalWindow("hide", "show", "", modalSelector, modalTimerID);
 	});
-
-	// Таймер для появления модального окна через определенное время
-	const modalTimerID = setTimeout(() => {
-		modalWindow("show", "hide", "hidden");
-	}, 300000);
 
 	// Слушатель модального окна после скролла
 	window.addEventListener("scroll", showModalByScroll);
@@ -63,10 +38,11 @@ const modals = function() {
 	// Функция появления модального окна после скролла
 	function showModalByScroll() {
 		if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-			modalWindow("show", "hide", "hidden");
+			modalWindow("show", "hide", "hidden", modalSelector, modalTimerID);
 			window.removeEventListener("scroll", showModalByScroll);
 		}
 	}
 };
 
-module.exports = modals;
+export default modals;
+export {modalWindow};
